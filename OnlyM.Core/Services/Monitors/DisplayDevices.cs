@@ -26,7 +26,7 @@
                 
                 EnumDisplayNativeMethods.DISPLAY_DEVICE device1 = new EnumDisplayNativeMethods.DISPLAY_DEVICE();
                 device1.cb = Marshal.SizeOf(device1);
-
+                
                 bool rv = EnumDisplayNativeMethods.EnumDisplayDevices(null, id, ref device1, 0);
                 Log.Logger.Verbose($"EnumDisplayDevices retval = {rv}");
 
@@ -50,12 +50,14 @@
                     if (rv && device2.StateFlags.HasFlag(EnumDisplayNativeMethods.DisplayDeviceStateFlags.AttachedToDesktop))
                     {
                         Log.Logger.Verbose($"Display device data = {device2.DeviceName}, {device2.DeviceID}");
+
+                        var deviceString = device2.DeviceString + " " + device2.DeviceName.Replace("\\\\.\\DISPLAY", "")[0];
                         
                         result.Add(new DisplayDeviceData
                         {
                             Name = device2.DeviceName,
                             DeviceId = device2.DeviceID,
-                            DeviceString = device2.DeviceString,
+                            DeviceString = deviceString,
                             DeviceKey = device2.DeviceKey
                         });
                     }
